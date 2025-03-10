@@ -6,7 +6,7 @@ use App\Models\Transition;
 use App\Service\ApiResponse;
 use Illuminate\Http\Request;
 
-class TrasitionController extends Controller
+class TransitionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class TrasitionController extends Controller
         $Transition = new Transition();
 
         $Transition->date_criated = now();
-        $Transition->tipe = $request->tipe;
+        $Transition->tipe = $request->tipe; //entrada ou saida
         $Transition->value = $request->value;
         $Transition->categoria = $request->categoria;
         $Transition->descricao = $request->descricao;
@@ -57,6 +57,11 @@ class TrasitionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $transition = Transition::find($id);
+
+        $transition->delete();
+        $transition->save();
+
+        return ApiResponse::success("Deletado com sucesso");
     }
 }
