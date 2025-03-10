@@ -2,30 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\ApiResponse;
+use App\Service\Session\LoginService;
+use App\Service\Session\LogoutService;
 use Illuminate\Http\Request;
+use App\Service\ApiResponse;
 
 class AuthController extends Controller
 {
-    public function Login(Request $request){
-        $email = $request->email;
-        $password = $request->password;
+    private $loginService;
+    private $logoutService;
 
-        $authentication = auth()->attempt([
-            'email' => $email,
-            'password' => $password
-        ]);
-        if(!$authentication){
-            return ApiResponse::error('Algo deu errado, tente novamente');
-        }
-        $user = auth()->user();
-        if(!$user){
-            return ApiResponse::error('Login não foi feito');
-        }
-        $token = $user->createToken($user->name)->plainTextToken;
-
-        return ApiResponse::success(['message' => 'User Loged','token' => $token]);
+    public function __construct(LoginService $loginService, LogoutService $logoutService)
+    {
+        $this->loginService = $loginService;
+        $this->logoutService = $logoutService;
     }
 
-}
+    public function Login(Request $request)
+    {
+        try {
+            $loginInfo = [
+                'email' => $request->email, 
+                'password' => $request->password
+            ];
 
+            return $this->loginService->attemptLogin($loginInfo);
+        } catch (\Exception $e) {
+
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+
+    public function Logout(Request $request){
+        try{
+        return $this->logoutService->logoutResponse();
+        }catch (\Exception $e) {
+
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+}

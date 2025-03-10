@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transitions', function (Blueprint $table) {
             $table->id();
             $table->datetime("date_criated");
-            $table->boolean("tipe");
+            $table->boolean("type");
             $table->decimal("value", 10, 2);
             $table->string("categoria");
             $table->string("descricao");

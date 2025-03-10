@@ -28,7 +28,13 @@ class ApiResponse{
             'message' => $message
         ], 500);
     }
-
+    
+    public static function unauthorized($message){
+        return response()->json([
+            'status_code' => 422,
+            'message' => $message
+        ], 422);
+    }
     public static function notFound (){
         return response()->json([
             'status_code' => 404,
