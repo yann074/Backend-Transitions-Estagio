@@ -15,9 +15,20 @@ class AllTransactions{
     
     public function allData()
     {
-        $transactions = $this->transaction::all(); 
-        return $transactions;
+        $transactions = Transaction::with('category')->get(); 
+    
+        return $transactions->map(function ($transaction) {
+            return [
+                'id' => $transaction->id,
+                'value' => $transaction->value,
+                'description' => $transaction->description,
+                'type' => $transaction->type,
+                'created_at' => $transaction->created_at,
+                'category' => $transaction->category->name ?? 'Sem categoria'
+            ];
+        });
     }
+    
     public function allDataSpecific($id)
     {
         $transaction = $this->transaction::findOrFail($id);

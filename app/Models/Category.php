@@ -10,4 +10,10 @@ class Category extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function category()
+{
+    return $this->belongsTo(Category::class, 'foreign_key_name');
+}
+
 }
