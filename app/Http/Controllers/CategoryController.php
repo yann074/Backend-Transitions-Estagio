@@ -31,20 +31,21 @@ class CategoryController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        try{
-            $data = [,
-                "category" => $request->category,
-            ];
+     */public function store(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-            return $this->category->newCategory( $data);
-        } catch (\Exception $e) {
-
-            return ApiResponse::error($e->getMessage());
-        }
+        return $this->category->newCategory($validated);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return ApiResponse::error($e->errors()); // Retorna os erros de validação
+    } catch (\Exception $e) {
+        return ApiResponse::error($e->getMessage());
     }
+}
+
 
     /**
      * Remove the specified resource from storage.

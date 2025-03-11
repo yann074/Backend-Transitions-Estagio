@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->datetime("created_date");
             $table->boolean("type");
             $table->decimal("value", 10, 2);
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // Alterar de 'category' para 'category_id'
             $table->string("description");
             $table->timestamps();
         });
     }
-
+     
     /**
      * Reverse the migrations.
      */

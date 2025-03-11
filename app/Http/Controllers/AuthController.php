@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Service\Session\LoginService;
 use App\Service\Session\LogoutService;
 use Illuminate\Http\Request;
@@ -18,13 +19,10 @@ class AuthController extends Controller
         $this->logoutService = $logoutService;
     }
 
-    public function Login(Request $request)
+    public function Login(LoginRequest $request)
     {
         try {
-            $loginInfo = [
-                'email' => $request->email, 
-                'password' => $request->password
-            ];
+            $loginInfo = $request->only('email', 'password');
 
             return $this->loginService->attemptLogin($loginInfo);
         } catch (\Exception $e) {

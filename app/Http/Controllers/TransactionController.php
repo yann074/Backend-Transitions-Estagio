@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Service\Transactions\AllTransactions;
+use App\Http\Requests\TransactionRequest;
 use App\Service\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -29,21 +30,27 @@ class TransactionController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
+    public function show($id)
+    {
+        try{
+            $data = $this->allTransactions->allDataSpecific($id);
+            return ApiResponse::success($data);
+        }catch (\Exception $e) {
+
+            return ApiResponse::error($e->getMessage());
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TransactionRequest $request)
     {
         try{
-            $data = [
-                "type" => $request->type,
-                "value" => $request->value,
-                "category" => $request->category,
-                "description" => $request->description,
-            ];
+            $returnData = $request->all();
+            
 
-            return $this->allTransactions->createdTransaction( $data);
+            return $this->allTransactions->createdTransaction( $returnData);
         } catch (\Exception $e) {
 
             return ApiResponse::error($e->getMessage());
@@ -53,16 +60,10 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(TransactionRequest $request, string $id)
     {
-        $id = Transaction::find($id);
         try{
-            $data = [
-                "type" => $request->type,
-                "value" => $request->value,
-                "category" => $request->category,
-                "description" => $request->description,
-            ];
+            $data = $request->all();
 
             return $this->allTransactions->updateTransaction($id, $data);
         } catch (\Exception $e) {
