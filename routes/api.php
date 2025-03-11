@@ -8,11 +8,14 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'Login']);
 Route::get('/logout', [AuthController::class, 'Logout']);
 
+//TRANSACTIONS
+    Route::get('/transactions', action: [TransactionController::class, 'index']);
+    Route::post('/transactions', [TransactionController::class, 'store']);
+    Route::delete("/transactions/{id}", [TransactionController::class, 'destroy']);
+    Route::put("/transactions/{id}", [TransactionController::class, 'update']);
 
-Route::middleware('auth:sanctum')->group(function() {
-    Route::get('/all', [TransactionController::class, 'index']);
-    Route::post('/new_transitions', [TransactionController::class, 'store']);
-    Route::delete("/delet/{id}", [TransactionController::class, 'destroy']);
-    Route::delete("/update/{id}", [TransactionController::class, 'update']);
-    
-});
+//CATEGORY
+    Route::get('/category', action: [TransactionController::class, 'index']);
+    Route::post('/category', [TransactionController::class, 'store']);
+    Route::delete("/category/{id}", [TransactionController::class, 'destroy']);
+

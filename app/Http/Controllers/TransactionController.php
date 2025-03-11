@@ -4,33 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Service\Transactions\AllTransactions;
-use App\Service\Transactions\CreateTransactions;
-use App\Service\Transactions\UpdateTransactions;
-use App\Service\Transactions\DestroyTransactions;
 use App\Service\ApiResponse;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
 
-    private $createTransactions;
-    private $destroyTransactions;
-    private $updateTransactions;
     private $allTransactions;
 
     //REFERENCIAR AO SERVICE
-    public function __construct(CreateTransactions $createTransactions, AllTransactions $allTransactions, UpdateTransactions $updateTransactions, DestroyTransactions $destroyTransactions){
-        $this->createTransactions = $createTransactions;
+    public function __construct(AllTransactions $allTransactions){
+
         $this->allTransactions = $allTransactions;
-        $this->updateTransactions = $updateTransactions;
-        $this->destroyTransactions = $destroyTransactions;
     }
 
     //TRAZER TODOS OS DADOS
     public function index()
     {
         try{
-            $this->allTransactions->allData();
+            $data = $this->allTransactions->allData();
+            return ApiResponse::success($data);
         }catch (\Exception $e) {
 
             return ApiResponse::error($e->getMessage());
@@ -46,11 +39,11 @@ class TransactionController extends Controller
             $data = [
                 "type" => $request->type,
                 "value" => $request->value,
-                "categoria" => $request->categoria,
-                "descricao" => $request->descricao,
+                "category" => $request->category,
+                "description" => $request->description,
             ];
 
-            return $this->createTransactions->createdTransaction( $data);
+            return $this->allTransactions->createdTransaction( $data);
         } catch (\Exception $e) {
 
             return ApiResponse::error($e->getMessage());
@@ -67,11 +60,11 @@ class TransactionController extends Controller
             $data = [
                 "type" => $request->type,
                 "value" => $request->value,
-                "categoria" => $request->categoria,
-                "descricao" => $request->descricao,
+                "category" => $request->category,
+                "description" => $request->description,
             ];
 
-            return $this->updateTransactions->updateTransaction($id, $data);
+            return $this->allTransactions->updateTransaction($id, $data);
         } catch (\Exception $e) {
 
             return ApiResponse::error($e->getMessage());
@@ -84,9 +77,9 @@ class TransactionController extends Controller
     public function destroy(string $id)
     {
         try{
-            return $this->destroyTransactions->destroyTransaction($id);
+            return $this->allTransactions->destroyTransaction($id);
         }catch (\Exception $e) {
-
+ 
             return ApiResponse::error($e->getMessage());
         }
     }
